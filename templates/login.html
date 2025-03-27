@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBIT Student Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            height: 100vh;
+        }
+        .left-section {
+            flex: 1.5;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* Darker overlay for better contrast */
+        }
+        .welcome-text {
+            position: absolute;
+            top: 30%;
+            left: 10%;
+            color: white;
+            font-size: 50px; /* Increased size */
+            font-weight: bold;
+            opacity: 0;
+            animation: slideIn 1s ease-in-out forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .right-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff; /* Adjusted background color */
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-container {
+            width: 350px;
+            padding: 20px;
+        }
+        .btn-google {
+            background-color: #db4437;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-google img {
+            width: 20px;
+            margin-right: 10px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        .popup.show {
+            display: block;
+        }
+</style>
+</head>
+<body>
+    <div class="left-section">
+        <iframe class="video-background" src="https://www.youtube.com/embed/U1FxwIgU6JY?autoplay=1&loop=1&mute=1&playlist=U1FxwIgU6JY" frameborder="0" allowfullscreen></iframe>
+        <div class="overlay"></div>
+        <div class="welcome-text">Welcome to DBIT Student Login Portal</div>
+    </div>
+    <div class="right-section">
+        <div class="login-container" action="{% url 'login_ajax' %}" method="POST">
+            <h2 class="text-center">Login</h2>
+            <form id="login-form">  
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <small id="email-error" class="text-danger"></small> <!-- Email error message -->
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" required>
+                        <span class="input-group-text" onclick="togglePassword()" style="cursor: pointer;">
+                            <i id="eye-icon" class="fa fa-eye"></i> <!-- Eye icon -->
+                        </span>
+                    </div>
+                    <small id="password-error" class="text-danger"></small> <!-- Password error message -->
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+                <small id="login-error" class="text-danger"></small> <!-- General login error -->
+                <button type="button" class="btn btn-google" onclick="loginWithGoogle()">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" alt="Google Logo">Login with Google
+                </button>
+            </form>
+            <p class="text-center mt-3">
+                Don't have an account? <a href="#" onclick="openSignup()">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="popup" id="signupPopup">
+        <h3>Sign Up</h3>
+        <form id="signupForm" name="signup" action="{% url 'savedata' %}" method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="newUsername" class="form-label">Username</label>
+                <input type="text" class="form-control" id="newUsername" name ="username"required>
+            </div>
+            <div class="mb-3">
+                <label for="newEmail" class="form-label">Email</label>
+                <input type="email" class="form-control" id="newEmail" name ="email1"required>
+            </div>
+            <div class="mb-3">
+                <label for="newPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="newPassword" name="password1" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Sign Up</button>
+            <button type="button" class="btn btn-secondary w-100 mt-2" onclick="closeSignup()">Close</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+        
+            let email = document.getElementById("email").value;  // FIXED: Correct ID
+            let password = document.getElementById("password").value; // FIXED: Correct ID
+            let csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+            console.log("Email:", email);
+            console.log("Password:", password);
+            console.log("CSRF Token:", csrfToken);
+        
+            // Debugging: Check if values are retrieved
+            console.log("Email:", email);
+            console.log("Password:", password);
+        
+            // Clear previous error messages
+            document.getElementById("email-error").innerText = "";
+            document.getElementById("password-error").innerText = "";
+            document.getElementById("login-error").innerText = "";
+        
+            fetch("{% url 'login_ajax' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": csrfToken
+                },
+                body: JSON.stringify({ email: email, password: password }) // FIXED: Corrected variable names
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Server response:", data); // Debugging: See what the server responds
+                if (data.success) {
+                    console.log("Login successful! Redirecting...");
+                    window.location.href = "{% url 'home' %}"; // Redirect on success
+                } else {
+                    if (data.error_type === "email") 
+                    
+                    { console.log("Login fail");
+                        document.getElementById("email-error").innerText = data.message;
+                    } else if (data.error_type === "password") {
+                        document.getElementById("password-error").innerText = data.message;
+                    } else {
+                        document.getElementById("login-error").innerText = data.message;
+                    }
+                }
+            })
+            .catch(error => console.error("Error:", error)); // Debugging: Log any errors
+        });
+        
+        function openSignup() {
+            document.getElementById("signupPopup").classList.add("show");
+        }
+        function closeSignup() {
+            document.getElementById("signupPopup").classList.remove("show");
+        }
+      
+    
+        function togglePassword() {
+            let passwordField = document.getElementById("password");
+            let eyeIcon = document.getElementById("eye-icon");
+    
+            if (passwordField.type === "password") {
+                passwordField.type = "text"; // Show password
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash"); // Change icon
+            } else {
+                passwordField.type = "password"; // Hide password
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye"); // Change icon
+            }
+        }
+        </script>
+        
+   
+        
+    </script>
+</body>
+</html>
