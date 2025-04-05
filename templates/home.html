@@ -129,38 +129,71 @@ body {
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script >
-    var ctx = document.getElementById('concessionChart').getContext('2d');
-    var concessionChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Remaining', 'Used'],
-            datasets: [{
-                data: [70, 30],
-                backgroundColor: ['blue', 'gray'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom'
+<script>
+    function updategraph()
+    {
+        var status = "{{ status|default:'pending' }}".trim();  // Ensure status exists
+        var usedPercentage = parseFloat("{{ used_percentage|default:0 }}") || 0;
+        var remainingPercentage = parseFloat("{{ remaining_percentage|default:100 }}") || 100;
+        console.log("Status:", status);
+        console.log("Used Percentage:", usedPercentage);
+        console.log("Remaining Percentage:", remainingPercentage);
+        var colors, labels, data;
+        
+        if (status === "pending") {
+            colors = ["#FFC107", "#E0E0E0"];  // Yellow & Gray for Pending
+            labels = ["Pending", "Remaining"];
+            data = [30, 70];  // Static data for pending
+        } 
+        else if (status === "accepted") {
+            colors = ["#4A90E2", "#D3D3D3"];  // Blue & Gray for Accepted
+            labels = ["Used", "Remaining"];
+            data = [usedPercentage, remainingPercentage];  // Use dynamically calculated values
+        } 
+        else if (status === "rejected") {
+            colors = ["#FF3B30", "#E0E0E0"];  // Red for Rejected, Gray for empty
+            labels = ["Rejected", "Empty"];
+            data = [100, 0];  // Full red for rejection
+        }
+        
+        // Now use the 'data', 'labels', and 'colors' variables in your chart rendering logic
+        
+        var ctx = document.getElementById('concessionChart').getContext('2d');
+        var concessionChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
                 }
             }
-        }
-    });
+        });
+    }
+    
     function openPopup() {
         document.getElementById('popup').style.display = 'block';
     }
+
     function closePopup() {
         document.getElementById('popup').style.display = 'none';
     }
+
     function confirmRenew() {
         alert("Concession Auto-Renewed Successfully!");
         closePopup();
     }
- 
+    //function for loading data in graph
+    window.onload = updategraph();
 </script>
+
 {% endblock %}

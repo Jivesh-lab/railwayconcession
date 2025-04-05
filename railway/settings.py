@@ -42,13 +42,15 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+   
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'railway.urls'
@@ -77,7 +79,7 @@ WSGI_APPLICATION = 'railway.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # MySQL backend
-        'NAME': 'concession',           # Database name
+        'NAME': 'myconcession',           # Database name
         'USER': 'root',              # MySQL username
         'PASSWORD': 'mynameisjp',      # MySQL password
         'HOST': 'localhost',                    # Or '127.0.0.1'
@@ -112,8 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Asia/Kolkata'
 
-TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
@@ -134,4 +137,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 3600  # 1 hour # Expires session on browser close
+
+AUTH_USER_MODEL = "concession.SignForm"  # ✅ Replace 'concession' with your app name

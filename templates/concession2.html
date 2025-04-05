@@ -107,8 +107,8 @@
                         <option value="3">3 Months</option>
                     </select>
                 </div>
-                <input type="hidden" id="current_date" name="current_date">
-                <input type="hidden" id="valid_till_date" name="valid_till_date">
+                <input type="text" id="current_date" name="current_date">
+                <input type="text" id="valid_till_date" name="valid_till_date">
                 <button type="button" class="btn btn-secondary" onclick="previewForm()">Preview Form</button>
                 <button type="submit"id="submitbtn" class="btn btn-primary" onclick="clickon(event)">Submit Form</button>
             </form>
@@ -170,26 +170,27 @@
             
             }
         }
-     
-
         function calculateDates() {
             let validityPeriod = document.getElementById("validity").value;
-    
-            // Get current date
+        
+            // Get current date adjusted for local time zone
             let currentDate = new Date();
-            let formattedCurrentDate = currentDate.toISOString().split('T')[0];
-    
-            // Calculate valid till date
-            let validTillDate = new Date(currentDate);
+            let localDate = new Date(currentDate.getTime() - currentDate.getTimezoneOffset() * 60000);
+            let formattedCurrentDate = localDate.toISOString().split('T')[0];
+        
+            // Calculate valid till date adjusted for local time zone
+            let validTillDate = new Date(localDate);
             validTillDate.setMonth(validTillDate.getMonth() + parseInt(validityPeriod));
             let formattedValidTillDate = validTillDate.toISOString().split('T')[0];
-    
+        
             // Set values in hidden fields
             document.getElementById("current_date").value = formattedCurrentDate;
             document.getElementById("valid_till_date").value = formattedValidTillDate;
-    
         }
-    
+        
+        // Run the function once when page loads to set default values
+
+        
         // Run the function once when page loads to set default values
         calculateDates();
     </script>
