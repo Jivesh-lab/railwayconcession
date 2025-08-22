@@ -1,10 +1,5 @@
 # Railway Concession website for students
-
-A platform where students can apply for concessions (e.g., transport, fees).
-
-Provides a digital dashboard for students and administrators.
-
-Offers real-time notifications and easy tracking.
-
-Aims to reduce paperwork and streamline the concession process.
+A railway conscession website aims for simplying the process of applying conscession and get the concession done in just few hours instead of manually adding all the details of the student .The technology stack used in these project are as follows
+Front end:- HTML,CSS,Javascript
+Backend:-Pyhton(Django)
 
