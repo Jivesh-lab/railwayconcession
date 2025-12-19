@@ -1,58 +1,76 @@
-📘 Railway Concession — Student Online Application System
+# 📘 Railway Concession — Student Online Application System
 
-A web application to simplify the process of applying for railway student concessions. Instead of filling physical forms manually, this system lets students submit details online and get their concession processed quickly.
+A **web application** to simplify the process of applying for *railway student concessions*. Instead of filling physical forms manually, this system lets students submit details online and get their concession processed quickly.
 
-<br>
-🧠 🚆 Project Overview
+---
 
-Railway Concession system provides:
+## 🧠 🚆 Project Overview
 
-✔ Easy online form submission
-✔ Student data validation
-✔ Django-based backend processing
-✔ Static responsive frontend
-✔ Saves data locally (SQLite)
+The Railway Concession system provides:
 
-🛠️ Technology Stack
+- ✔ Easy online form submission  
+- ✔ Student data validation  
+- ✔ Django-based backend processing  
+- ✔ Static responsive frontend  
+- ✔ Saves data locally (SQLite)
+
+---
+
+## 🛠️ Technology Stack
+
 | Layer         | Technology                 |
-| ------------- | -------------------------- |
+|---------------|----------------------------|
 | Frontend      | HTML, CSS, JavaScript      |
 | Backend       | Python (Django)            |
 | Database      | SQLite (default Django DB) |
 | Templating    | Django Templating Engine   |
-| Static Assets | CSS, images                |
+| Static Assets | CSS, Images                |
 | Deployment    | GitHub / Local Server      |
 
+---
 
-🏛️ Architecture Diagram
+## 🏛️ Architecture Diagram
+
+```mermaid
 flowchart TD
-    A[User Browser] -->|HTTP Request| B(Django Views)
+    A[User Browser] -->|HTTP Request| B[Django Views]
     B --> C[Form Validation]
     C --> D[Database (SQLite)]
-    D --> E[Response Rendered HTML]
+    D --> E[Rendered HTML Response]
     E --> A
-    B --> Static[CSS/JS/Images]
-    Static --> A
+    B --> Static[CSS / JS / Images]
+    Static --> A 
+
+````
+
 💻 Setup & Installation (Local)
 
-Follow these step-by-step instructions to run this project locally:
+Follow these step-by-step instructions to run this project locally.
 
-1️⃣ Clone the repo
+1️⃣ Clone the repository
 git clone https://github.com/Jivesh-lab/railwayconcession.git
 cd railwayconcession
 
-2️⃣ Create & activate Python environment
+2️⃣ Create & activate virtual environment
 python -m venv venv
-# Windows
+
+
+Windows
+
 venv\Scripts\activate
-# macOS / Linux
+
+
+macOS / Linux
+
 source venv/bin/activate
 
 3️⃣ Install dependencies
 pip install django
 
 
-(If you have a requirements.txt, run pip install -r requirements.txt.)
+(If a requirements.txt exists, use:)
+
+pip install -r requirements.txt
 
 4️⃣ Run migrations
 python manage.py makemigrations
@@ -63,3 +81,4 @@ python manage.py runserver
 
 6️⃣ Open in browser
 http://127.0.0.1:8000/
+
