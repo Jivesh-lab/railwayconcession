@@ -33,13 +33,13 @@ The Railway Concession system provides:
 
 ```mermaid
 flowchart TD
-    A[User Browser] -->|HTTP Request| B[Django Views]
+    A[User Browser] --> B[Django Views]
     B --> C[Form Validation]
-    C --> D[Database (SQLite)]
+    C --> D[(Database)]
     D --> E[Rendered HTML Response]
     E --> A
-    B --> Static[CSS / JS / Images]
-    Static --> A 
+    B --> F[Static Files]
+    F --> A
 
 ````
 
